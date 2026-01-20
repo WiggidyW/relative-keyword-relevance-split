@@ -96,5 +96,8 @@
   ],
   "output": {
     "$jmespath": "zip_map(&avg(@),tasks[0][].scores)"
+  },
+  "output_length": {
+    "$jmespath": "length(input.contentItems)"
   }
 }
