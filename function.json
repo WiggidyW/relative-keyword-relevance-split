@@ -1,0 +1,100 @@
+{
+  "type": "vector.function",
+  "description": "Keyword-based Relevance Rankings. Discover which piece of content is most relevant to specific keywords. Splits each keyword into a separate Vector Completion Task.",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "keywords": {
+        "type": "array",
+        "description": "Keywords to evaluate relevance against.",
+        "minItems": 1,
+        "items": {
+          "type": "string",
+          "description": "A keyword to evaluate relevance against."
+        }
+      },
+      "contentItems": {
+        "type": "array",
+        "description": "Content items to be ranked for relevance.",
+        "minItems": 2,
+        "items": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "Text content to be evaluated for relevance."
+            },
+            {
+              "type": "image",
+              "description": "Image content to be evaluated for relevance."
+            },
+            {
+              "type": "video",
+              "description": "Video content to be evaluated for relevance."
+            },
+            {
+              "type": "audio",
+              "description": "Audio content to be evaluated for relevance."
+            },
+            {
+              "type": "file",
+              "description": "File content to be evaluated for relevance."
+            },
+            {
+              "type": "array",
+              "description": "Array of content pieces to be evaluated for relevance.",
+              "minItems": 1,
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "description": "Text content to be evaluated for relevance."
+                  },
+                  {
+                    "type": "image",
+                    "description": "Image content to be evaluated for relevance."
+                  },
+                  {
+                    "type": "video",
+                    "description": "Video content to be evaluated for relevance."
+                  },
+                  {
+                    "type": "audio",
+                    "description": "Audio content to be evaluated for relevance."
+                  },
+                  {
+                    "type": "file",
+                    "description": "File content to be evaluated for relevance."
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    "required": ["keywords", "contentItems"]
+  },
+  "input_maps": {
+    "$jmespath": "to_array(input.keywords)"
+  },
+  "tasks": [
+    {
+      "type": "vector.completion",
+      "map": 0,
+      "messages": [
+        {
+          "role": "user",
+          "content": {
+            "$jmespath": "join('',['Which content is most relevant with regards to \"',map,'\"?'])"
+          }
+        }
+      ],
+      "responses": {
+        "$jmespath": "input.contentItems[].input_value_switch(@,`null`,&[].input_value_switch(@,`null`,`null`,&{type:'text',text:@},`null`,`null`,`null`,@,@,@,@),@,`null`,`null`,`null`,@,@,@,@)"
+      }
+    }
+  ],
+  "output": {
+    "$jmespath": "zip_map(&avg(@),tasks[0][].scores)"
+  }
+}

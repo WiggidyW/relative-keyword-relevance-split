@@ -1,0 +1,75 @@
+{
+  "description": "The default profile for `WiggidyW/relative-keyword-relevance-split`. Non-Reasoning. Supports multi-modal content.",
+  "tasks": [
+    {
+      "ensemble": {
+        "llms": [
+          {
+            "model": "openai/gpt-4.1-nano",
+            "output_mode": "json_schema"
+          },
+          {
+            "model": "openai/gpt-4.1-nano",
+            "output_mode": "json_schema",
+            "temperature": 0.75
+          },
+          {
+            "model": "openai/gpt-4.1-nano",
+            "output_mode": "json_schema",
+            "temperature": 1.25
+          },
+          {
+            "model": "google/gemini-2.5-flash-lite",
+            "output_mode": "json_schema"
+          },
+          {
+            "model": "x-ai/grok-4.1-fast",
+            "output_mode": "json_schema",
+            "temperature": 0.75,
+            "reasoning": {
+              "enabled": false
+            }
+          },
+          {
+            "model": "x-ai/grok-4.1-fast",
+            "output_mode": "json_schema",
+            "temperature": 1.25,
+            "reasoning": {
+              "enabled": false
+            }
+          },
+          {
+            "count": 3,
+            "model": "deepseek/deepseek-v3.2",
+            "output_mode": "instruction",
+            "top_logprobs": 20
+          },
+          {
+            "model": "google/gemini-2.5-flash-lite",
+            "output_mode": "json_schema",
+            "temperature": 0.75
+          },
+          {
+            "model": "google/gemini-2.5-flash-lite",
+            "output_mode": "json_schema",
+            "temperature": 1.25
+          },
+          {
+            "count": 3,
+            "model": "openai/gpt-4o-mini",
+            "output_mode": "json_schema",
+            "top_logprobs": 20
+          },
+          {
+            "model": "x-ai/grok-4.1-fast",
+            "output_mode": "json_schema",
+            "reasoning": {
+              "enabled": false
+            }
+          }
+        ]
+      },
+      "profile": [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]
+    }
+  ]
+}
