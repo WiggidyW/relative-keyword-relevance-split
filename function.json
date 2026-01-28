@@ -16,7 +16,7 @@
       "contentItems": {
         "type": "array",
         "description": "Content items to be ranked for relevance.",
-        "minItems": 2,
+        "minItems": 1,
         "items": {
           "anyOf": [
             {
@@ -99,5 +99,11 @@
   },
   "output_length": {
     "$jmespath": "length(input.contentItems)"
+  },
+  "input_split": {
+    "$jmespath": "zip_map(&{keywords:@[0],contentItems:[@[1]]},[repeat(input.keywords,length(input.contentItems)),input.contentItems])"
+  },
+  "input_merge": {
+    "$jmespath": "@.{keywords:input[0].keywords,contentItems:input[].contentItems[0]}"
   }
 }
