@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "changed=$(git diff --name-only build.ts example_input.ts init.ts publish.ts test.ts 2>/dev/null); if [ -n \"$changed\" ]; then git checkout -- build.ts example_input.ts init.ts publish.ts test.ts 2>/dev/null; echo \"These files are immutable and cannot be changed: build.ts, example_input.ts, init.ts, publish.ts, test.ts\"; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
