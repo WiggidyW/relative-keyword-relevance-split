@@ -49,10 +49,10 @@ function spawnApiServer(): Promise<ChildProcess> {
         resolved = true;
         killApiProcess();
         reject(
-          new Error("Timeout: API server did not start within 120 seconds"),
+          new Error("Timeout: API server did not start within 300 seconds"),
         );
       }
-    }, 120000);
+    }, 300000);
 
     const onData = (data: Buffer) => {
       const output = data.toString();

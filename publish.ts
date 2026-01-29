@@ -38,9 +38,7 @@ function validateGitHubRemote(): void {
   }).trim();
 
   if (!remoteUrl.includes("github.com")) {
-    throw new Error(
-      `Remote must be a GitHub repository.\nGot: ${remoteUrl}`,
-    );
+    throw new Error(`Remote must be a GitHub repository.\nGot: ${remoteUrl}`);
   }
 }
 
@@ -71,7 +69,7 @@ async function execute(
   input: Functions.Expression.InputValue,
   owner: string,
   repository: string,
-): Promise<void> {
+): Promise<number> {
   const response = await Functions.Executions.remoteFunctionRemoteProfileCreate(
     openai as any,
     owner,
@@ -89,6 +87,13 @@ async function execute(
       `Function execution was usage-free for input ${JSON.stringify(input)}. Unable to publish Function & Profile without usage.`,
     );
   }
+  console.log(
+    new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: "USD",
+    }).format(response.usage.total_cost / 100),
+  );
+  return response.usage.total_cost;
 }
 
 async function main(): Promise<void> {
@@ -105,7 +110,11 @@ async function main(): Promise<void> {
   for (const { value } of ExampleInputs) {
     promises.push(execute(openai, value, owner, repository));
   }
-  await Promise.all(promises);
+  const costs = await Promise.all(promises);
+  const totalCost = costs.reduce((a, b) => a + b, 0);
+  console.log(
+    `Total cost: ${new Intl.NumberFormat(undefined, { style: "currency", currency: "USD" }).format(totalCost / 100)}`,
+  );
   console.log("Function & Profile published successfully.");
 }
 
