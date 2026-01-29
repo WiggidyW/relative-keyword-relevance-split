@@ -72,7 +72,10 @@
         }
       }
     },
-    "required": ["keywords", "contentItems"]
+    "required": [
+      "keywords",
+      "contentItems"
+    ]
   },
   "input_maps": {
     "$jmespath": "to_array(input.keywords)"
